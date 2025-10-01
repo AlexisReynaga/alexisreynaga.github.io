@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alexis Saúl López Reynaga | Portafolio</title>
+  <!-- Tailwind v4 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <meta name="description" content="Portafolio de proyectos de programación de Alexis López Reynaga" />
+</head>
+<body class="bg-gray-50 text-gray-800 selection:bg-blue-200/60">
+  <!-- Navbar -->
+  <header class="sticky top-0 z-50 bg-white/80 backdrop-blur border-b">
+    <nav class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="#" class="font-bold tracking-tight text-xl">Alexis.dev</a>
+      <button id="menuBtn" class="md:hidden p-2 rounded hover:bg-gray-100" aria-label="Abrir menú">
+        <!-- Icono burger -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <ul id="menu" class="hidden md:flex gap-6 items-center text-sm">
+        <li><a href="#about" class="hover:text-blue-600">Sobre mí</a></li>
+        <li><a href="#projects" class="hover:text-blue-600">Proyectos</a></li>
+        <li><a href="#skills" class="hover:text-blue-600">Habilidades</a></li>
+        <li><a href="#contact" class="hover:text-blue-600">Contacto</a></li>
+        <li><a href="https://github.com/alexisreynaga" target="_blank" class="inline-flex items-center gap-2 px-3 py-1.5 border rounded-md hover:bg-gray-50">GitHub
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4"><path fill="currentColor" d="M12 .5C5.73.5.98 5.24.98 11.5c0 4.85 3.14 8.96 7.49 10.41.55.1.75-.24.75-.53 0-.26-.01-1.11-.02-2.01-3.05.66-3.69-1.3-3.69-1.3-.5-1.26-1.22-1.6-1.22-1.6-.99-.67.08-.66.08-.66 1.09.08 1.67 1.12 1.67 1.12.98 1.67 2.58 1.19 3.21.9.1-.71.38-1.19.69-1.47-2.44-.28-5-1.22-5-5.42 0-1.2.43-2.18 1.12-2.95-.11-.28-.49-1.42.11-2.96 0 0 .93-.3 3.05 1.13.88-.24 1.83-.36 2.77-.36.94 0 1.9.12 2.78.36 2.11-1.43 3.04-1.13 3.04-1.13.6 1.54.22 2.68.11 2.96.7.77 1.12 1.75 1.12 2.95 0 4.21-2.57 5.13-5.01 5.4.39.34.74 1.01.74 2.04 0 1.47-.01 2.66-.01 3.02 0 .29.19.64.75.53 4.35-1.45 7.49-5.56 7.49-10.41C23.02 5.24 18.27.5 12 .5Z"/></svg></a></li>
+      </ul>
+    </nav>
+    <!-- Menú móvil -->
+    <ul id="menuMobile" class="md:hidden hidden border-t bg-white">
+      <li><a href="#about" class="block px-4 py-3 hover:bg-gray-50">Sobre mí</a></li>
+      <li><a href="#projects" class="block px-4 py-3 hover:bg-gray-50">Proyectos</a></li>
+      <li><a href="#skills" class="block px-4 py-3 hover:bg-gray-50">Habilidades</a></li>
+      <li><a href="#contact" class="block px-4 py-3 hover:bg-gray-50">Contacto</a></li>
+    </ul>
+  </header>
+
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <div class="max-w-6xl mx-auto px-4 pt-12 pb-20 grid md:grid-cols-2 gap-8 items-center">
+      <div>
+        <p class="text-sm uppercase tracking-widest text-blue-700/80 font-semibold">Programador & Estudiante</p>
+        <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mt-2">Hola, soy <span class="text-blue-700">Alexis Saúl López Reynaga</span>.</h1>
+        <p class="text-lg mt-4 text-gray-600">Construyo soluciones con <strong>Laravel, Tailwind, Angular, Flutter y Python</strong>. Me interesan los sistemas académicos, chatbots y apps móviles.</p>
+        <div class="mt-6 flex gap-3">
+          <a href="#projects" class="px-5 py-2.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700">Ver proyectos</a>
+          <a href="#contact" class="px-5 py-2.5 rounded-lg border hover:bg-gray-50">Contacto</a>
+        </div>
+      </div>
+      <div class="md:justify-self-end">
+        <!-- Avatar / Ilustración -->
+        <img src="https://avatars.githubusercontent.com/u/187663225?s=400&u=631f6df1ee2eff53e13f235b36ecf30b3492452c&v=4" alt="Avatar Alexis" class="w-48 h-48 mx-auto md:mx-0 rounded-2xl shadow-xl object-cover" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Sobre mí -->
+  <section id="about" class="py-16 border-t bg-white">
+    <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-3 gap-8">
+      <div class="md:col-span-1">
+        <h2 class="text-2xl font-bold">Sobre mí</h2>
+      </div>
+      <div class="md:col-span-2 space-y-4 leading-relaxed">
+        <p>Estudiante avanzado de <strong>Ingeniería en Sistemas Inteligentes (UASLP)</strong> con experiencia práctica en desarrollo de software y proyectos de IA. Experiencia en atención al cliente que fortaleció mis habilidades de comunicación y resolución de problemas bajo presión.</p>
+        <p>Busco aplicar mis conocimientos técnicos e interpersonales en proyectos retadores. He trabajado con <strong>Rasa</strong> para NLU, <strong>Laravel + MySQL</strong> para sistemas académicos y <strong>Angular</strong> para aplicaciones web escalables.</p>
+        <div class="flex flex-wrap gap-2 text-xs">
+          <span class="px-2 py-1 rounded bg-blue-100 text-blue-800">Disponible para prácticas</span>
+          <span class="px-2 py-1 rounded bg-green-100 text-green-800">Freelance</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Proyectos -->
+  <section id="projects" class="py-16 border-t">
+    <div class="max-w-6xl mx-auto px-4">
+      <h2 class="text-2xl font-bold mb-6">Proyectos</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Chatbot Rasa -->
+        <article class="bg-white rounded-xl border shadow-sm hover:shadow-md transition overflow-hidden flex flex-col">
+          <div class="aspect-video bg-gray-100 grid place-items-center text-sm text-gray-500">Captura / GIF</div>
+          <div class="p-4 flex-1 flex flex-col">
+            <h3 class="font-semibold text-lg">Chatbot Académico Conversacional</h3>
+            <p class="text-sm text-gray-600 mt-1">Desarrollo integral con <strong>Rasa</strong> y <strong>Python</strong>: intents, entities, actions personalizadas y fuzzy matching para consultar planes de estudio. Orquestado con Docker/Docker Compose.</p>
+            <ul class="mt-3 flex flex-wrap gap-2 text-xs">
+              <li class="px-2 py-1 rounded bg-gray-100">Rasa</li>
+              <li class="px-2 py-1 rounded bg-gray-100">Python</li>
+              <li class="px-2 py-1 rounded bg-gray-100">Docker</li>
+              <li class="px-2 py-1 rounded bg-gray-100">JSON</li>
+            </ul>
+            <div class="mt-4 flex gap-3 text-sm">
+              <span class="px-3 py-1.5 rounded bg-gray-200 text-gray-700">Demo (próximamente)</span>
+              <a href="#" class="px-3 py-1.5 rounded border hover:bg-gray-50">Código</a>
+            </div>
+          </div>
+        </article>
+        <!-- Sistema académico Laravel -->
+        <article class="bg-white rounded-xl border shadow-sm hover:shadow-md transition overflow-hidden flex flex-col">
+          <div class="aspect-video bg-gray-100 grid place-items-center text-sm text-gray-500">Captura / GIF</div>
+          <div class="p-4 flex-1 flex flex-col">
+            <h3 class="font-semibold text-lg">Sistema de Control para Maestros</h3>
+            <p class="text-sm text-gray-600 mt-1">Aplicación web para gestión de clases, horarios y planes de estudio. Participación en requerimientos, arquitectura y UX.</p>
+            <ul class="mt-3 flex flex-wrap gap-2 text-xs">
+              <li class="px-2 py-1 rounded bg-gray-100">Laravel 11</li>
+              <li class="px-2 py-1 rounded bg-gray-100">Tailwind</li>
+              <li class="px-2 py-1 rounded bg-gray-100">MySQL</li>
+            </ul>
+            <div class="mt-4 flex gap-3 text-sm">
+              <span class="px-3 py-1.5 rounded bg-gray-200 text-gray-700">Demo (próximamente)</span>
+              <a href="#" class="px-3 py-1.5 rounded border hover:bg-gray-50">Código</a>
+            </div>
+          </div>
+        </article>
+        <!-- Angular -->
+        <article class="bg-white rounded-xl border shadow-sm hover:shadow-md transition overflow-hidden flex flex-col">
+          <div class="aspect-video bg-gray-100 grid place-items-center text-sm text-gray-500">Captura / GIF</div>
+          <div class="p-4 flex-1 flex flex-col">
+            <h3 class="font-semibold text-lg">Web con Angular – App escalable</h3>
+            <p class="text-sm text-gray-600 mt-1">Navegación entre secciones, contenido dinámico y formulario básico. Práctica con TypeScript y arquitectura por componentes.</p>
+            <ul class="mt-3 flex flex-wrap gap-2 text-xs">
+              <li class="px-2 py-1 rounded bg-gray-100">Angular</li>
+              <li class="px-2 py-1 rounded bg-gray-100">TypeScript</li>
+              <li class="px-2 py-1 rounded bg-gray-100">SPA</li>
+            </ul>
+            <div class="mt-4 flex gap-3 text-sm">
+              <span class="px-3 py-1.5 rounded bg-gray-200 text-gray-700">Demo (próximamente)</span>
+              <a href="#" class="px-3 py-1.5 rounded border hover:bg-gray-50">Código</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Habilidades -->
+  <section id="skills" class="py-16 border-t bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+      <h2 class="text-2xl font-bold mb-6">Habilidades</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+        <div class="p-4 border rounded-xl bg-gray-50">
+          <h3 class="font-semibold">Lenguajes</h3>
+          <p class="mt-1 text-gray-600">C, C++, Python, PHP, JavaScript, Dart (Flutter)</p>
+        </div>
+        <div class="p-4 border rounded-xl bg-gray-50">
+          <h3 class="font-semibold">Web</h3>
+          <p class="mt-1 text-gray-600">Laravel 11, Tailwind CSS, Angular, React (básico)</p>
+        </div>
+        <div class="p-4 border rounded-xl bg-gray-50">
+          <h3 class="font-semibold">Bases de datos</h3>
+          <p class="mt-1 text-gray-600">MySQL</p>
+        </div>
+        <div class="p-4 border rounded-xl bg-gray-50">
+          <h3 class="font-semibold">Herramientas</h3>
+          <p class="mt-1 text-gray-600">VS Code, GitHub, XAMPP, Google Colab, Weka, Docker, Rasa, Laragon, Linux</p>
+        </div>
+        <div class="p-4 border rounded-xl bg-gray-50">
+          <h3 class="font-semibold">Blandas</h3>
+          <p class="mt-1 text-gray-600">Comunicación, organización/tiempo, adaptabilidad, trabajo en equipo</p>
+        </div>
+        <div class="p-4 border rounded-xl bg-gray-50">
+          <h3 class="font-semibold">Idiomas</h3>
+          <p class="mt-1 text-gray-600">Español (nativo), Inglés (intermedio)</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contacto -->
+  <section id="contact" class="py-16 border-t">
+    <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-8">
+      <div>
+        <h2 class="text-2xl font-bold">Contacto</h2>
+        <p class="mt-2 text-gray-600">¿Te interesa colaborar o contratarme? Escríbeme.</p>
+        <ul class="mt-6 space-y-2 text-sm">
+          <li><strong>Correo:</strong> <a href="mailto:alexisreynaga30@gmail.com" class="text-blue-700 hover:underline">alexisreynaga30@gmail.com</a></li>
+          <li><strong>Teléfono:</strong> <a href="tel:+524831195125" class="text-blue-700 hover:underline">+52 483 119 5125</a></li>
+          <li><strong>GitHub:</strong> <a href="https://github.com/" target="_blank" class="text-blue-700 hover:underline">@alexisreynaga</a></li>
+          <li><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/" target="_blank" class="text-blue-700 hover:underline">/in/alexisreynaga/a></li>
+        </ul>
+      </div>
+      <form class="bg-white p-6 rounded-xl border shadow-sm">
+        <label class="block text-sm">Nombre</label>
+        <input type="text" placeholder="Tu nombre" class="mt-1 w-full border rounded-lg px-3 py-2"/>
+        <label class="block text-sm mt-4">Email</label>
+        <input type="email" placeholder="tucorreo@correo.com" class="mt-1 w-full border rounded-lg px-3 py-2"/>
+        <label class="block text-sm mt-4">Mensaje</label>
+        <textarea placeholder="Cuéntame tu idea" class="mt-1 w-full border rounded-lg px-3 py-2 h-28"></textarea>
+        <button type="button" class="mt-4 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">Enviar</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="py-10 text-center text-sm text-gray-500 border-t">
+    © <span id="year"></span> Alexis López Reynaga. Todos los derechos reservados.
+  </footer>
+
+  <script>
+    // Año footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+    // Menú móvil
+    const btn = document.getElementById('menuBtn');
+    const mobile = document.getElementById('menuMobile');
+    btn?.addEventListener('click', () => mobile.classList.toggle('hidden'))
+  </script>
+</body>
+</html>
