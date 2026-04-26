@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Alexis Reynaga</title>
-  
+
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
@@ -28,72 +31,229 @@
       user-select: none;
     }
 
-    h1, h2, h3, .tech-font { font-family: 'Orbitron', sans-serif; letter-spacing: 2px; }
+    h1,
+    h2,
+    h3,
+    .tech-font {
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 2px;
+    }
 
-    #matrix-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; opacity: 0.25; pointer-events: none; }
+    #matrix-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      opacity: 0.25;
+      pointer-events: none;
+    }
 
-    .cursor-dot { width: 8px; height: 8px; background: var(--neon-green); border-radius: 50%; position: fixed; z-index: 99999 !important; pointer-events: none; box-shadow: 0 0 10px var(--neon-green); }
-    .cursor-circle { width: 40px; height: 40px; border: 2px solid var(--neon-green); border-radius: 50%; position: fixed; z-index: 99998 !important; pointer-events: none; transition: transform 0.15s ease-out; box-shadow: 0 0 5px var(--neon-green), inset 0 0 5px var(--neon-green); }
+    /* OPTIMIZACIÓN: top:0, left:0, will-change y sin transiciones CSS lentas */
+    .cursor-dot {
+      top: 0;
+      left: 0;
+      width: 8px;
+      height: 8px;
+      background: var(--neon-green);
+      border-radius: 50%;
+      position: fixed;
+      z-index: 99999 !important;
+      pointer-events: none;
+      box-shadow: 0 0 10px var(--neon-green);
+      will-change: transform;
+    }
+
+    .cursor-circle {
+      top: 0;
+      left: 0;
+      width: 40px;
+      height: 40px;
+      border: 2px solid var(--neon-green);
+      border-radius: 50%;
+      position: fixed;
+      z-index: 99998 !important;
+      pointer-events: none;
+      box-shadow: 0 0 5px var(--neon-green), inset 0 0 5px var(--neon-green);
+      will-change: transform;
+    }
 
     .hud-card {
       position: relative;
-      background: rgba(5, 5, 10, 0.95);
-      backdrop-filter: blur(8px);
+      /* OPTIMIZACIÓN: Fondo sólido opaco, eliminado el backdrop-filter pesado */
+      background: rgba(5, 5, 10, 0.98);
       border-radius: 1rem;
       border: 1px solid rgba(255, 255, 255, 0.1);
       transform-style: preserve-3d;
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       transition: border-color 0.3s;
     }
-    .hud-card:hover { border-color: rgba(10, 255, 10, 0.4); }
+
+    .hud-card:hover {
+      border-color: rgba(10, 255, 10, 0.4);
+    }
 
     .hud-card::before {
-        content: ''; position: absolute; top: -1px; left: -1px; right: -1px; bottom: -1px;
-        background: linear-gradient(45deg, var(--neon-green), var(--neon-blue), var(--neon-purple));
-        background-size: 200% 200%; z-index: -1; border-radius: inherit;
-        animation: borderFlow 5s ease infinite; opacity: 0; transition: opacity 0.5s ease; filter: blur(5px);
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      right: -1px;
+      bottom: -1px;
+      background: linear-gradient(45deg, var(--neon-green), var(--neon-blue), var(--neon-purple));
+      background-size: 200% 200%;
+      z-index: -1;
+      border-radius: inherit;
+      animation: borderFlow 5s ease infinite;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      filter: blur(5px);
     }
-    .hud-card:hover::before { opacity: 0.3; }
-    @keyframes borderFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+    .hud-card:hover::before {
+      opacity: 0.3;
+    }
+
+    @keyframes borderFlow {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
 
     .scene {
-      display: flex; justify-content: center; align-items: center;
-      perspective: 1000px; height: 350px; width: 100%; position: relative; cursor: grab; 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      perspective: 1000px;
+      height: 350px;
+      width: 100%;
+      position: relative;
+      cursor: grab;
     }
-    .scene:active { cursor: grabbing; }
-    .carousel { width: 100%; height: 100%; position: absolute; transform-style: preserve-3d; }
+
+    .scene:active {
+      cursor: grabbing;
+    }
+
+    .carousel {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      transform-style: preserve-3d;
+    }
+
     .carousel__cell {
-      position: absolute; width: 150px; height: 190px;
-      left: 50%; top: 50%; margin-left: -75px; margin-top: -95px;
-      transform-style: preserve-3d; 
+      position: absolute;
+      width: 150px;
+      height: 190px;
+      left: 50%;
+      top: 50%;
+      margin-left: -75px;
+      margin-top: -95px;
+      transform-style: preserve-3d;
     }
+
     .cell-content {
-      width: 100%; height: 100%;
+      width: 100%;
+      height: 100%;
       background: rgba(10, 20, 15, 0.95);
       border: 1px solid var(--neon-green);
       border-radius: 12px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       box-shadow: 0 0 15px rgba(10, 255, 10, 0.1);
       transition: all 0.3s ease;
     }
+
     .carousel__cell:hover .cell-content {
-      background: rgba(20, 50, 30, 1); border-color: #fff; box-shadow: 0 0 30px var(--neon-green); transform: scale(1.15) translateZ(20px);
+      background: rgba(20, 50, 30, 1);
+      border-color: #fff;
+      box-shadow: 0 0 30px var(--neon-green);
+      transform: scale(1.15) translateZ(20px);
     }
 
-    .bar-anim { height: 100%; background: var(--neon-blue); animation: barFlux 3s infinite ease-in-out alternate; width: 50%; box-shadow: 0 0 10px var(--neon-blue); }
-    .bar-anim-2 { height: 100%; background: var(--neon-purple); animation: barFlux 2s infinite ease-in-out alternate-reverse; width: 70%; box-shadow: 0 0 10px var(--neon-purple); }
-    .bar-anim-3 { height: 100%; background: var(--neon-green); animation: barFlux 4s infinite ease-in-out alternate; width: 30%; box-shadow: 0 0 10px var(--neon-green); }
-    @keyframes barFlux { 0% { width: 30%; opacity: 0.7; } 100% { width: 90%; opacity: 1; } }
+    .bar-anim {
+      height: 100%;
+      background: var(--neon-blue);
+      animation: barFlux 3s infinite ease-in-out alternate;
+      width: 50%;
+      box-shadow: 0 0 10px var(--neon-blue);
+    }
 
-    .glitch-text:hover { animation: glitch-skew 0.3s infinite; color: var(--neon-green); }
-    @keyframes glitch-skew { 0% { transform: skew(0deg); } 20% { transform: skew(-10deg); } 100% { transform: skew(0deg); } }
+    .bar-anim-2 {
+      height: 100%;
+      background: var(--neon-purple);
+      animation: barFlux 2s infinite ease-in-out alternate-reverse;
+      width: 70%;
+      box-shadow: 0 0 10px var(--neon-purple);
+    }
 
-    ::-webkit-scrollbar { width: 10px; }
-    ::-webkit-scrollbar-track { background: #000; }
-    ::-webkit-scrollbar-thumb { background: #004400; border: 1px solid #00ff41; }
+    .bar-anim-3 {
+      height: 100%;
+      background: var(--neon-green);
+      animation: barFlux 4s infinite ease-in-out alternate;
+      width: 30%;
+      box-shadow: 0 0 10px var(--neon-green);
+    }
+
+    @keyframes barFlux {
+      0% {
+        width: 30%;
+        opacity: 0.7;
+      }
+
+      100% {
+        width: 90%;
+        opacity: 1;
+      }
+    }
+
+    .glitch-text:hover {
+      animation: glitch-skew 0.3s infinite;
+      color: var(--neon-green);
+    }
+
+    @keyframes glitch-skew {
+      0% {
+        transform: skew(0deg);
+      }
+
+      20% {
+        transform: skew(-10deg);
+      }
+
+      100% {
+        transform: skew(0deg);
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #000;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #004400;
+      border: 1px solid #00ff41;
+    }
   </style>
 </head>
+
 <body>
 
   <canvas id="matrix-canvas"></canvas>
@@ -110,11 +270,15 @@
         <li><a href="#skills" class="hover:text-green-400 transition hover-trigger">Habilidades</a></li>
         <li><a href="#history" class="hover:text-green-400 transition hover-trigger">Trayectoria</a></li>
         <li><a href="#projects" class="hover:text-green-400 transition hover-trigger">Proyectos</a></li>
-        <li><a href="#contact" class="px-4 py-2 border border-green-800 text-green-500 hover:bg-green-500/10 hover:border-green-400 transition hover-trigger">Contacto</a></li>
+        <li><a href="#contact"
+            class="px-4 py-2 border border-green-800 text-green-500 hover:bg-green-500/10 hover:border-green-400 transition hover-trigger">Contacto</a>
+        </li>
       </ul>
-      <button id="mobileBtn" class="md:hidden text-green-500 text-2xl hover-trigger"><i class="fa-solid fa-bars"></i></button>
+      <button id="mobileBtn" class="md:hidden text-green-500 text-2xl hover-trigger"><i
+          class="fa-solid fa-bars"></i></button>
     </div>
-    <div id="mobileMenu" class="hidden absolute top-full left-0 w-full bg-black border-b border-green-900 flex-col items-center py-4 space-y-4 shadow-xl">
+    <div id="mobileMenu"
+      class="hidden absolute top-full left-0 w-full bg-black border-b border-green-900 flex-col items-center py-4 space-y-4 shadow-xl">
       <a href="#about" class="text-white hover:text-green-400">Sobre mí</a>
       <a href="#skills" class="text-white hover:text-green-400">Habilidades</a>
       <a href="#history" class="text-white hover:text-green-400">Trayectoria</a>
@@ -125,35 +289,50 @@
 
   <section class="min-h-screen flex items-center justify-center pt-20 px-6 overflow-hidden relative z-10">
     <div class="max-w-6xl w-full grid md:grid-cols-2 gap-16 items-center">
-      <div class="space-y-8" data-tilt data-tilt-max="3" data-tilt-speed="1000" data-tilt-glare data-tilt-max-glare="0.1">
-        <div class="inline-flex items-center gap-2 px-4 py-1 border border-green-500/30 rounded bg-black/80 backdrop-blur text-green-400 text-xs font-bold tracking-widest uppercase">
+      <div class="space-y-8" data-tilt data-tilt-max="3" data-tilt-speed="1000" data-tilt-glare
+        data-tilt-max-glare="0.1">
+        <div
+          class="inline-flex items-center gap-2 px-4 py-1 border border-green-500/30 rounded bg-black/80 backdrop-blur text-green-400 text-xs font-bold tracking-widest uppercase">
           <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
           Sistema Online
         </div>
-        <h1 class="text-5xl md:text-8xl font-black text-white leading-none tech-font glitch-text" style="text-shadow: 0 0 20px rgba(0,255,65,0.5);">
+        <h1 class="text-5xl md:text-8xl font-black text-white leading-none tech-font glitch-text"
+          style="text-shadow: 0 0 20px rgba(0,255,65,0.5);">
           ALEXIS <br>
           <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">REYNAGA</span>
         </h1>
-        <p class="text-xl text-gray-300 font-medium border-l-4 border-green-800 pl-6 py-3 bg-black/50 backdrop-blur-sm rounded-r">
+        <p
+          class="text-xl text-gray-300 font-medium border-l-4 border-green-800 pl-6 py-3 bg-black/50 backdrop-blur-sm rounded-r">
           Ingeniero de Sistemas Inteligentes. <br>
           Forjando el futuro con <strong class="text-green-400">código e IA</strong>.
         </p>
         <div class="flex flex-wrap gap-6 pt-4">
-          <a href="#projects" class="hover-trigger px-8 py-4 bg-green-700 hover:bg-green-600 text-white font-bold uppercase tracking-widest transition rounded shadow-lg hover:shadow-green-500/30 hover:scale-105">
-             Ver Proyectos
+          <a href="#projects"
+            class="hover-trigger px-8 py-4 bg-green-700 hover:bg-green-600 text-white font-bold uppercase tracking-widest transition rounded shadow-lg hover:shadow-green-500/30 hover:scale-105">
+            Ver Proyectos
           </a>
-          <a href="https://github.com/alexisreynaga" target="_blank" class="hover-trigger px-8 py-4 bg-black/60 border border-white/20 text-white hover:bg-white/5 transition uppercase tracking-widest rounded flex items-center gap-3 hover:border-green-400 hover:text-green-400">
+          <a href="https://github.com/alexisreynaga" target="_blank"
+            class="hover-trigger px-8 py-4 bg-black/60 border border-white/20 text-white hover:bg-white/5 transition uppercase tracking-widest rounded flex items-center gap-3 hover:border-green-400 hover:text-green-400">
             <i class="fa-brands fa-github text-2xl"></i> GitHub
           </a>
         </div>
       </div>
 
       <div class="relative flex justify-center items-center perspective-1000">
-        <div class="relative w-72 h-72 md:w-96 md:h-96 rounded-full p-2 group cursor-pointer js-tilt" data-tilt data-tilt-glare data-tilt-max-glare="0.2" data-tilt-scale="1.02">
-          <div class="absolute inset-0 bg-gradient-to-r from-green-900 to-blue-900 rounded-full blur-[60px] opacity-20 group-hover:opacity-30 transition duration-500"></div>
-          <div class="absolute inset-0 rounded-full border-2 border-dashed border-green-500/30 animate-[spin_30s_linear_infinite]"></div>
-          <div class="absolute inset-4 rounded-full border-2 border-dotted border-blue-500/30 animate-[spin_20s_linear_infinite_reverse]"></div>
-          <img src="assets/alexis.png" alt="Alexis" class="relative w-full h-full object-cover rounded-full border-4 border-gray-900 shadow-2xl z-20" onerror="this.src='https://ui-avatars.com/api/?name=Alexis+Reynaga&background=052e16&color=4ade80&size=512'">
+        <div class="relative w-72 h-72 md:w-96 md:h-96 rounded-full p-2 group cursor-pointer js-tilt" data-tilt
+          data-tilt-glare data-tilt-max-glare="0.2" data-tilt-scale="1.02">
+          <div
+            class="absolute inset-0 bg-gradient-to-r from-green-900 to-blue-900 rounded-full blur-[60px] opacity-20 group-hover:opacity-30 transition duration-500">
+          </div>
+          <div
+            class="absolute inset-0 rounded-full border-2 border-dashed border-green-500/30 animate-[spin_30s_linear_infinite]">
+          </div>
+          <div
+            class="absolute inset-4 rounded-full border-2 border-dotted border-blue-500/30 animate-[spin_20s_linear_infinite_reverse]">
+          </div>
+          <img src="assets/alexis.png" alt="Alexis"
+            class="relative w-full h-full object-cover rounded-full border-4 border-gray-900 shadow-2xl z-20"
+            onerror="this.src='https://ui-avatars.com/api/?name=Alexis+Reynaga&background=052e16&color=4ade80&size=512'">
         </div>
       </div>
     </div>
@@ -166,13 +345,17 @@
         <h2 class="text-3xl md:text-4xl text-white font-bold tech-font">SOBRE MÍ</h2>
       </div>
 
-      <div class="hud-card p-8 md:p-12 grid md:grid-cols-3 gap-10 items-start js-tilt" data-tilt data-tilt-glare data-tilt-max-glare="0.05">
+      <div class="hud-card p-8 md:p-12 grid md:grid-cols-3 gap-10 items-start js-tilt" data-tilt data-tilt-glare
+        data-tilt-max-glare="0.05">
         <div class="md:col-span-2 space-y-6 relative z-10">
           <p class="text-xl leading-relaxed text-gray-300">
-            Egresado de <strong class="text-green-400">Ingeniería en Sistemas Inteligentes (UASLP)</strong>. Mi enfoque combina la solidez del backend con interfaces limpias.
+            Egresado de <strong class="text-green-400">Ingeniería en Sistemas Inteligentes (UASLP)</strong>. Mi enfoque
+            combina la solidez del backend con interfaces limpias.
           </p>
           <p class="text-lg leading-relaxed text-gray-400">
-            Me apasiona la Inteligencia Artificial aplicada. He trabajado integrando modelos de NLU con <strong class="text-purple-400">Rasa</strong> y construyendo sistemas robustos con <strong class="text-blue-400">Laravel + MySQL</strong>.
+            Me apasiona la Inteligencia Artificial aplicada. He trabajado integrando modelos de NLU con <strong
+              class="text-purple-400">Rasa</strong> y construyendo sistemas robustos con <strong
+              class="text-blue-400">Laravel + MySQL</strong>.
           </p>
           <div class="grid grid-cols-2 gap-6 pt-6">
             <div class="bg-green-950/30 p-4 rounded border-l-2 border-green-600">
@@ -187,11 +370,13 @@
         </div>
         <div class="space-y-8 font-mono text-sm border-l border-gray-800 pl-8 relative z-10">
           <div>
-            <span class="text-gray-500 block mb-2 uppercase tracking-widest"><i class="fa-solid fa-location-dot"></i> Ubicación</span>
+            <span class="text-gray-500 block mb-2 uppercase tracking-widest"><i class="fa-solid fa-location-dot"></i>
+              Ubicación</span>
             <span class="text-gray-300 text-lg">San Luis Potosí, MX</span>
           </div>
           <div>
-            <span class="text-gray-500 block mb-2 uppercase tracking-widest"><i class="fa-solid fa-language"></i> Idiomas</span>
+            <span class="text-gray-500 block mb-2 uppercase tracking-widest"><i class="fa-solid fa-language"></i>
+              Idiomas</span>
             <ul class="text-gray-300 space-y-3">
               <li class="flex justify-between items-center">
                 <span>Español</span> <span class="text-green-500 font-bold">Nativo</span>
@@ -211,21 +396,61 @@
       <div class="flex items-center justify-center gap-4 mb-10 text-center">
         <h2 class="text-3xl md:text-5xl text-white font-bold tech-font glitch-text">REACTOR TECNOLÓGICO</h2>
       </div>
-      
+
       <p class="text-center text-green-500/50 text-xs font-mono mb-10 animate-pulse">
         <i class="fa-solid fa-hand-pointer"></i> ARRASTRA EL NÚCLEO PARA GIRAR
       </p>
 
       <div class="scene mb-24">
         <div class="carousel">
-          <div class="carousel__cell hover-trigger"><div class="cell-content"><i class="fa-brands fa-laravel text-5xl text-red-500 mb-2"></i><h3 class="font-bold text-white text-lg">Laravel</h3><span class="text-xs text-red-400 font-mono">BACKEND</span></div></div>
-          <div class="carousel__cell hover-trigger"><div class="cell-content"><i class="fa-brands fa-python text-5xl text-blue-500 mb-2"></i><h3 class="font-bold text-white text-lg">Python</h3><span class="text-xs text-blue-400 font-mono">IA & DATA</span></div></div>
-          <div class="carousel__cell hover-trigger"><div class="cell-content"><i class="fa-solid fa-mobile-screen text-5xl text-cyan-400 mb-2"></i><h3 class="font-bold text-white text-lg">Flutter</h3><span class="text-xs text-cyan-400 font-mono">MOBILE</span></div></div>
-          <div class="carousel__cell hover-trigger"><div class="cell-content"><i class="fa-solid fa-database text-5xl text-orange-500 mb-2"></i><h3 class="font-bold text-white text-lg">MySQL</h3><span class="text-xs text-orange-400 font-mono">DB</span></div></div>
-          <div class="carousel__cell hover-trigger"><div class="cell-content"><i class="fa-brands fa-js text-5xl text-yellow-400 mb-2"></i><h3 class="font-bold text-white text-lg">JavaScript</h3><span class="text-xs text-yellow-400 font-mono">WEB</span></div></div>
-          <div class="carousel__cell hover-trigger"><div class="cell-content"><i class="fa-solid fa-robot text-5xl text-purple-500 mb-2"></i><h3 class="font-bold text-white text-lg">Rasa AI</h3><span class="text-xs text-purple-400 font-mono">NLU</span></div></div>
-          <div class="carousel__cell hover-trigger"><div class="cell-content"><i class="fa-brands fa-docker text-5xl text-blue-600 mb-2"></i><h3 class="font-bold text-white text-lg">Docker</h3><span class="text-xs text-blue-400 font-mono">DEVOPS</span></div></div>
-          <div class="carousel__cell hover-trigger"><div class="cell-content"><i class="fa-brands fa-git-alt text-5xl text-orange-600 mb-2"></i><h3 class="font-bold text-white text-lg">Git</h3><span class="text-xs text-orange-400 font-mono">VERSION</span></div></div>
+          <div class="carousel__cell hover-trigger">
+            <div class="cell-content"><i class="fa-brands fa-laravel text-5xl text-red-500 mb-2"></i>
+              <h3 class="font-bold text-white text-lg">Laravel</h3><span
+                class="text-xs text-red-400 font-mono">BACKEND</span>
+            </div>
+          </div>
+          <div class="carousel__cell hover-trigger">
+            <div class="cell-content"><i class="fa-brands fa-python text-5xl text-blue-500 mb-2"></i>
+              <h3 class="font-bold text-white text-lg">Python</h3><span class="text-xs text-blue-400 font-mono">IA &
+                DATA</span>
+            </div>
+          </div>
+          <div class="carousel__cell hover-trigger">
+            <div class="cell-content"><i class="fa-solid fa-mobile-screen text-5xl text-cyan-400 mb-2"></i>
+              <h3 class="font-bold text-white text-lg">Flutter</h3><span
+                class="text-xs text-cyan-400 font-mono">MOBILE</span>
+            </div>
+          </div>
+          <div class="carousel__cell hover-trigger">
+            <div class="cell-content"><i class="fa-solid fa-database text-5xl text-orange-500 mb-2"></i>
+              <h3 class="font-bold text-white text-lg">MySQL</h3><span
+                class="text-xs text-orange-400 font-mono">DB</span>
+            </div>
+          </div>
+          <div class="carousel__cell hover-trigger">
+            <div class="cell-content"><i class="fa-brands fa-js text-5xl text-yellow-400 mb-2"></i>
+              <h3 class="font-bold text-white text-lg">JavaScript</h3><span
+                class="text-xs text-yellow-400 font-mono">WEB</span>
+            </div>
+          </div>
+          <div class="carousel__cell hover-trigger">
+            <div class="cell-content"><i class="fa-solid fa-robot text-5xl text-purple-500 mb-2"></i>
+              <h3 class="font-bold text-white text-lg">Rasa AI</h3><span
+                class="text-xs text-purple-400 font-mono">NLU</span>
+            </div>
+          </div>
+          <div class="carousel__cell hover-trigger">
+            <div class="cell-content"><i class="fa-brands fa-docker text-5xl text-blue-600 mb-2"></i>
+              <h3 class="font-bold text-white text-lg">Docker</h3><span
+                class="text-xs text-blue-400 font-mono">DEVOPS</span>
+            </div>
+          </div>
+          <div class="carousel__cell hover-trigger">
+            <div class="cell-content"><i class="fa-brands fa-git-alt text-5xl text-orange-600 mb-2"></i>
+              <h3 class="font-bold text-white text-lg">Git</h3><span
+                class="text-xs text-orange-400 font-mono">VERSION</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -236,10 +461,12 @@
             <h3 class="text-xl font-bold text-white tech-font">SOFT SKILLS</h3>
           </div>
           <ul class="space-y-3 text-sm text-gray-300">
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-pink-500"></i> Comunicación Efectiva</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-pink-500"></i> Comunicación Efectiva
+            </li>
             <li class="flex items-center gap-2"><i class="fa-solid fa-check text-pink-500"></i> Trabajo en Equipo</li>
             <li class="flex items-center gap-2"><i class="fa-solid fa-check text-pink-500"></i> Adaptabilidad</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-pink-500"></i> Resolución de Problemas</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-pink-500"></i> Resolución de Problemas
+            </li>
           </ul>
         </div>
 
@@ -250,12 +477,18 @@
           </div>
           <div class="space-y-4">
             <div>
-              <div class="flex justify-between text-xs text-gray-400 mb-1"><span>ESPAÑOL (Nativo)</span> <span>100%</span></div>
-              <div class="h-2 w-full bg-gray-800 rounded-full overflow-hidden"><div class="h-full bg-green-500 w-full"></div></div>
+              <div class="flex justify-between text-xs text-gray-400 mb-1"><span>ESPAÑOL (Nativo)</span>
+                <span>100%</span></div>
+              <div class="h-2 w-full bg-gray-800 rounded-full overflow-hidden">
+                <div class="h-full bg-green-500 w-full"></div>
+              </div>
             </div>
             <div>
-              <div class="flex justify-between text-xs text-gray-400 mb-1"><span>INGLÉS (Técnico)</span> <span>60%</span></div>
-              <div class="h-2 w-full bg-gray-800 rounded-full overflow-hidden"><div class="h-full bg-yellow-500 w-[60%]"></div></div>
+              <div class="flex justify-between text-xs text-gray-400 mb-1"><span>INGLÉS (Técnico)</span>
+                <span>60%</span></div>
+              <div class="h-2 w-full bg-gray-800 rounded-full overflow-hidden">
+                <div class="h-full bg-yellow-500 w-[60%]"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -267,16 +500,25 @@
           </div>
           <div class="space-y-4 font-mono text-xs">
             <div>
-              <div class="flex justify-between text-gray-400 mb-1"><span>CPU LOAD</span> <span class="text-blue-400">RUNNING...</span></div>
-              <div class="h-2 w-full bg-gray-800 rounded-full overflow-hidden"><div class="bar-anim"></div></div>
+              <div class="flex justify-between text-gray-400 mb-1"><span>CPU LOAD</span> <span
+                  class="text-blue-400">RUNNING...</span></div>
+              <div class="h-2 w-full bg-gray-800 rounded-full overflow-hidden">
+                <div class="bar-anim"></div>
+              </div>
             </div>
             <div>
-              <div class="flex justify-between text-gray-400 mb-1"><span>MEMORY</span> <span class="text-purple-400">OPTIMIZED</span></div>
-              <div class="h-2 w-full bg-gray-800 rounded-full overflow-hidden"><div class="bar-anim-2"></div></div>
+              <div class="flex justify-between text-gray-400 mb-1"><span>MEMORY</span> <span
+                  class="text-purple-400">OPTIMIZED</span></div>
+              <div class="h-2 w-full bg-gray-800 rounded-full overflow-hidden">
+                <div class="bar-anim-2"></div>
+              </div>
             </div>
             <div>
-              <div class="flex justify-between text-gray-400 mb-1"><span>NETWORK</span> <span class="text-green-400">ONLINE</span></div>
-              <div class="h-2 w-full bg-gray-800 rounded-full overflow-hidden"><div class="bar-anim-3"></div></div>
+              <div class="flex justify-between text-gray-400 mb-1"><span>NETWORK</span> <span
+                  class="text-green-400">ONLINE</span></div>
+              <div class="h-2 w-full bg-gray-800 rounded-full overflow-hidden">
+                <div class="bar-anim-3"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -292,62 +534,82 @@
       </div>
 
       <div class="relative border-l-2 border-purple-900/50 ml-3 md:ml-6 space-y-12">
-        <div class="absolute top-0 bottom-0 -left-[1px] w-0.5 bg-gradient-to-b from-purple-500 via-blue-500 to-transparent shadow-[0_0_10px_#a855f7]"></div>
-
-
-      <div class="relative pl-8 md:pl-12 group">
-        <div class="absolute -left-[9px] top-0 w-5 h-5 bg-black border-2 border-green-500 rounded-full group-hover:bg-green-500 group-hover:shadow-[0_0_15px_#22c55e] transition duration-300 animate-pulse"></div>
-        
-        <div class="hud-card p-6 border-l-4 border-l-green-500 js-tilt" data-tilt data-tilt-scale="1.01">
-          <span class="text-xs font-mono text-green-400 mb-1 block">ACTUALIDAD</span>
-          <h3 class="text-xl font-bold text-white mb-2">Developer in Club Forma</h3>
-          <p class="text-gray-400 text-sm">
-            Desarrollo y mantenimiento de soluciones de software. Implementación de nuevas tecnologías y optimización de sistemas internos.
-          </p>
+        <div
+          class="absolute top-0 bottom-0 -left-[1px] w-0.5 bg-gradient-to-b from-purple-500 via-blue-500 to-transparent shadow-[0_0_10px_#a855f7]">
         </div>
-      </div>
+
 
         <div class="relative pl-8 md:pl-12 group">
-          <div class="absolute -left-[9px] top-0 w-5 h-5 bg-black border-2 border-green-500 rounded-full group-hover:bg-green-500 group-hover:shadow-[0_0_15px_#22c55e] transition duration-300"></div>
+          <div
+            class="absolute -left-[9px] top-0 w-5 h-5 bg-black border-2 border-green-500 rounded-full group-hover:bg-green-500 group-hover:shadow-[0_0_15px_#22c55e] transition duration-300 animate-pulse">
+          </div>
+
+          <div class="hud-card p-6 border-l-4 border-l-green-500 js-tilt" data-tilt data-tilt-scale="1.01">
+            <span class="text-xs font-mono text-green-400 mb-1 block">ACTUALIDAD</span>
+            <h3 class="text-xl font-bold text-white mb-2">Developer in Club Forma</h3>
+            <p class="text-gray-400 text-sm">
+              Desarrollo y mantenimiento de soluciones de software. Implementación de nuevas tecnologías y optimización
+              de sistemas internos.
+            </p>
+          </div>
+        </div>
+
+        <div class="relative pl-8 md:pl-12 group">
+          <div
+            class="absolute -left-[9px] top-0 w-5 h-5 bg-black border-2 border-green-500 rounded-full group-hover:bg-green-500 group-hover:shadow-[0_0_15px_#22c55e] transition duration-300">
+          </div>
           <div class="hud-card p-6 border-l-4 border-l-green-500 js-tilt" data-tilt data-tilt-scale="1.01">
             <span class="text-xs font-mono text-green-400 mb-1 block">DICIEMBRE 2025</span>
             <h3 class="text-xl font-bold text-white mb-2">Ingeniero en Sistemas Inteligentes</h3>
-            <p class="text-gray-400 text-sm">Graduación de la Universidad Autónoma de San Luis Potosí (UASLP). Especialización en desarrollo de software e Inteligencia Artificial.</p>
+            <p class="text-gray-400 text-sm">Graduación de la Universidad Autónoma de San Luis Potosí (UASLP).
+              Especialización en desarrollo de software e Inteligencia Artificial.</p>
           </div>
         </div>
 
         <div class="relative pl-8 md:pl-12 group">
-          <div class="absolute -left-[9px] top-0 w-5 h-5 bg-black border-2 border-blue-500 rounded-full group-hover:bg-blue-500 group-hover:shadow-[0_0_15px_#3b82f6] transition duration-300"></div>
+          <div
+            class="absolute -left-[9px] top-0 w-5 h-5 bg-black border-2 border-blue-500 rounded-full group-hover:bg-blue-500 group-hover:shadow-[0_0_15px_#3b82f6] transition duration-300">
+          </div>
           <div class="hud-card p-6 border-l-4 border-l-blue-500 js-tilt" data-tilt data-tilt-scale="1.01">
             <span class="text-xs font-mono text-blue-400 mb-1 block">JUNIO 2025 - Enero 2026</span>
             <h3 class="text-xl font-bold text-white mb-2">Desarrollador Móvil Freelance</h3>
-            <p class="text-gray-400 text-sm">Contrato con <strong>GameInspiration</strong> para desarrollo de App Móvil. Desarrollo continuo de proyectos web full stack a medida.</p>
+            <p class="text-gray-400 text-sm">Contrato con <strong>GameInspiration</strong> para desarrollo de App Móvil.
+              Desarrollo continuo de proyectos web full stack a medida.</p>
           </div>
         </div>
 
         <div class="relative pl-8 md:pl-12 group">
-          <div class="absolute -left-[9px] top-0 w-5 h-5 bg-black border-2 border-purple-500 rounded-full group-hover:bg-purple-500 group-hover:shadow-[0_0_15px_#a855f7] transition duration-300"></div>
+          <div
+            class="absolute -left-[9px] top-0 w-5 h-5 bg-black border-2 border-purple-500 rounded-full group-hover:bg-purple-500 group-hover:shadow-[0_0_15px_#a855f7] transition duration-300">
+          </div>
           <div class="hud-card p-6 border-l-4 border-l-purple-500 js-tilt" data-tilt data-tilt-scale="1.01">
             <span class="text-xs font-mono text-purple-400 mb-1 block">ABRIL 2025</span>
             <h3 class="text-xl font-bold text-white mb-2">Talent Land GDL 2025</h3>
-            <p class="text-gray-400 text-sm">Participación en el evento de tecnología más grande de México en Guadalajara. Networking y actualización en tendencias tech.</p>
+            <p class="text-gray-400 text-sm">Participación en el evento de tecnología más grande de México en
+              Guadalajara. Networking y actualización en tendencias tech.</p>
           </div>
         </div>
 
         <div class="relative pl-8 md:pl-12 group">
-          <div class="absolute -left-[9px] top-0 w-5 h-5 bg-black border-2 border-gray-500 rounded-full group-hover:bg-gray-500 transition duration-300"></div>
+          <div
+            class="absolute -left-[9px] top-0 w-5 h-5 bg-black border-2 border-gray-500 rounded-full group-hover:bg-gray-500 transition duration-300">
+          </div>
           <div class="hud-card p-6 border-l-4 border-l-gray-500 js-tilt" data-tilt data-tilt-scale="1.01">
             <span class="text-xs font-mono text-gray-400 mb-1 block">AGOSTO 2021</span>
             <h3 class="text-xl font-bold text-white mb-2">Inicio de Formación Profesional</h3>
-            <p class="text-gray-400 text-sm">Comienzo de estudios en la UASLP, enfocándome en lógica de programación y estructuras de datos.</p>
+            <p class="text-gray-400 text-sm">Comienzo de estudios en la UASLP, enfocándome en lógica de programación y
+              estructuras de datos.</p>
           </div>
         </div>
       </div>
-      
+
       <div class="mt-16 text-center">
-        <a href="assets/CV_LopezAlexis.pdf" target="_blank" class="inline-flex items-center gap-3 px-8 py-4 bg-transparent border-2 border-white/20 text-white font-bold uppercase tracking-widest hover:bg-white hover:text-black hover:border-white transition rounded group relative overflow-hidden">
+        <a href="assets/CV_LopezAlexis.pdf" target="_blank"
+          class="inline-flex items-center gap-3 px-8 py-4 bg-transparent border-2 border-white/20 text-white font-bold uppercase tracking-widest hover:bg-white hover:text-black hover:border-white transition rounded group relative overflow-hidden">
           <span class="relative z-10"><i class="fa-solid fa-file-arrow-down"></i> DOWNLOAD_CV.PDF</span>
-          <div class="absolute inset-0 bg-green-400 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 z-0"></div>
+          <div
+            class="absolute inset-0 bg-green-400 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 z-0">
+          </div>
         </a>
       </div>
     </div>
@@ -361,111 +623,164 @@
       </div>
 
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-        <article class="hud-card flex flex-col h-full hover-trigger js-tilt" data-tilt data-tilt-scale="1.02" data-tilt-glare data-tilt-max-glare="0.1">
+        <article class="hud-card flex flex-col h-full hover-trigger js-tilt" data-tilt data-tilt-scale="1.02"
+          data-tilt-glare data-tilt-max-glare="0.1">
           <div class="relative h-52 bg-black/50 overflow-hidden border-b border-gray-800 group">
-            <img src="assets/ventas.png" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition duration-700" onerror="this.style.display='none'">
-            <div class="absolute top-4 right-4 bg-purple-600 text-white text-xs px-3 py-1 font-bold z-10 uppercase rounded shadow-lg animate-pulse">Livewire</div>
-            <div class="absolute inset-0 flex items-center justify-center z-[-1]"><i class="fa-solid fa-desktop text-7xl text-gray-800"></i></div>
+            <img src="assets/ventas.png"
+              class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition duration-700"
+              onerror="this.style.display='none'">
+            <div
+              class="absolute top-4 right-4 bg-purple-600 text-white text-xs px-3 py-1 font-bold z-10 uppercase rounded shadow-lg animate-pulse">
+              Livewire</div>
+            <div class="absolute inset-0 flex items-center justify-center z-[-1]"><i
+                class="fa-solid fa-desktop text-7xl text-gray-800"></i></div>
           </div>
           <div class="p-8 flex-1 flex flex-col">
-            <h3 class="text-xl font-bold text-gray-200 mb-3 tech-font group-hover:text-purple-400 transition">TECHSTORE</h3>
+            <h3 class="text-xl font-bold text-gray-200 mb-3 tech-font group-hover:text-purple-400 transition">TECHSTORE
+            </h3>
             <p class="text-xs mb-5 font-mono text-purple-400">LARAVEL | SPA | MYSQL</p>
-            <p class="text-gray-400 mb-8 flex-1 leading-relaxed text-sm">Tienda en línea completa. Gestión de carrito en tiempo real y panel administrativo sin recargas.</p>
+            <p class="text-gray-400 mb-8 flex-1 leading-relaxed text-sm">Tienda en línea completa. Gestión de carrito en
+              tiempo real y panel administrativo sin recargas.</p>
             <div class="flex gap-4 mt-auto">
-              <a href="https://github.com/AlexisReynaga/Ventas-PC" target="_blank" class="px-4 py-2 border border-gray-700 hover:border-gray-500 text-gray-400 hover:text-gray-200 transition rounded"><i class="fa-brands fa-github text-xl"></i></a>
+              <a href="https://github.com/AlexisReynaga/Ventas-PC" target="_blank"
+                class="px-4 py-2 border border-gray-700 hover:border-gray-500 text-gray-400 hover:text-gray-200 transition rounded"><i
+                  class="fa-brands fa-github text-xl"></i></a>
             </div>
           </div>
         </article>
 
-        <article class="hud-card flex flex-col h-full hover-trigger js-tilt" data-tilt data-tilt-scale="1.02" data-tilt-glare data-tilt-max-glare="0.1">
+        <article class="hud-card flex flex-col h-full hover-trigger js-tilt" data-tilt data-tilt-scale="1.02"
+          data-tilt-glare data-tilt-max-glare="0.1">
           <div class="relative h-52 bg-black/50 overflow-hidden border-b border-gray-800 group">
-            <img src="assets/chatbot.png" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition duration-700" onerror="this.style.display='none'">
-            <div class="absolute inset-0 flex items-center justify-center z-[-1]"><i class="fa-solid fa-robot text-8xl text-gray-800"></i></div>
+            <img src="assets/chatbot.png"
+              class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition duration-700"
+              onerror="this.style.display='none'">
+            <div class="absolute inset-0 flex items-center justify-center z-[-1]"><i
+                class="fa-solid fa-robot text-8xl text-gray-800"></i></div>
           </div>
           <div class="p-8 flex-1 flex flex-col">
-            <h3 class="text-xl font-bold text-gray-200 mb-3 tech-font group-hover:text-green-400 transition">CHATBOT ACADÉMICO</h3>
+            <h3 class="text-xl font-bold text-gray-200 mb-3 tech-font group-hover:text-green-400 transition">CHATBOT
+              ACADÉMICO</h3>
             <p class="text-xs mb-5 font-mono text-green-400">PYTHON | RASA | DOCKER</p>
-            <p class="text-gray-400 mb-8 flex-1 leading-relaxed text-sm">IA que entiende lenguaje natural (NLU) para resolver dudas de estudiantes universitarios.</p>
+            <p class="text-gray-400 mb-8 flex-1 leading-relaxed text-sm">IA que entiende lenguaje natural (NLU) para
+              resolver dudas de estudiantes universitarios.</p>
             <div class="flex gap-4 mt-auto">
-              <span class="flex-1 text-center py-2 bg-gray-900/50 border border-gray-700 text-gray-500 text-xs font-bold uppercase tracking-wider cursor-not-allowed rounded opacity-70"><i class="fa-solid fa-server mr-2"></i> Backend Only</span>
-              <a href="https://github.com/SirAxLord/Chatbot.git" target="_blank" class="px-4 py-2 border border-gray-700 hover:border-gray-500 text-gray-400 hover:text-gray-200 transition rounded"><i class="fa-brands fa-github text-xl"></i></a>
+              <span
+                class="flex-1 text-center py-2 bg-gray-900/50 border border-gray-700 text-gray-500 text-xs font-bold uppercase tracking-wider cursor-not-allowed rounded opacity-70"><i
+                  class="fa-solid fa-server mr-2"></i> Backend Only</span>
+              <a href="https://github.com/SirAxLord/Chatbot.git" target="_blank"
+                class="px-4 py-2 border border-gray-700 hover:border-gray-500 text-gray-400 hover:text-gray-200 transition rounded"><i
+                  class="fa-brands fa-github text-xl"></i></a>
             </div>
           </div>
         </article>
 
-        <article class="hud-card flex flex-col h-full hover-trigger js-tilt" data-tilt data-tilt-scale="1.02" data-tilt-glare data-tilt-max-glare="0.1">
+        <article class="hud-card flex flex-col h-full hover-trigger js-tilt" data-tilt data-tilt-scale="1.02"
+          data-tilt-glare data-tilt-max-glare="0.1">
           <div class="relative h-52 bg-black/50 overflow-hidden border-b border-gray-800 group">
-            <img src="assets/scaad.png" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition duration-700" onerror="this.style.display='none'">
-            <div class="absolute inset-0 flex items-center justify-center z-[-1]"><i class="fa-solid fa-school text-8xl text-gray-800"></i></div>
+            <img src="assets/scaad.png"
+              class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition duration-700"
+              onerror="this.style.display='none'">
+            <div class="absolute inset-0 flex items-center justify-center z-[-1]"><i
+                class="fa-solid fa-school text-8xl text-gray-800"></i></div>
           </div>
           <div class="p-8 flex-1 flex flex-col">
-            <h3 class="text-xl font-bold text-gray-200 mb-3 tech-font group-hover:text-blue-400 transition">SCAAD SYSTEM</h3>
+            <h3 class="text-xl font-bold text-gray-200 mb-3 tech-font group-hover:text-blue-400 transition">SCAAD SYSTEM
+            </h3>
             <p class="text-xs mb-5 font-mono text-blue-400">LARAVEL | TAILWIND</p>
-            <p class="text-gray-400 mb-8 flex-1 leading-relaxed text-sm">Plataforma masiva de gestión de horarios y clases. Arquitectura robusta.</p>
+            <p class="text-gray-400 mb-8 flex-1 leading-relaxed text-sm">Plataforma masiva de gestión de horarios y
+              clases. Arquitectura robusta.</p>
             <div class="mt-auto pt-4 border-t border-gray-800 text-center">
-              <span class="text-xs text-red-900 font-bold uppercase tracking-wider flex items-center justify-center gap-2 opacity-70"><i class="fa-solid fa-lock"></i> Repositorio Privado</span>
+              <span
+                class="text-xs text-red-900 font-bold uppercase tracking-wider flex items-center justify-center gap-2 opacity-70"><i
+                  class="fa-solid fa-lock"></i> Repositorio Privado</span>
             </div>
           </div>
         </article>
 
-        <article class="hud-card flex flex-col h-full hover-trigger js-tilt" data-tilt data-tilt-scale="1.02" data-tilt-glare data-tilt-max-glare="0.1">
+        <article class="hud-card flex flex-col h-full hover-trigger js-tilt" data-tilt data-tilt-scale="1.02"
+          data-tilt-glare data-tilt-max-glare="0.1">
           <div class="relative h-52 bg-black/50 overflow-hidden border-b border-gray-800 group">
-            <img src="assets/pokedex.png" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition duration-700" onerror="this.style.display='none'">
-            <div class="absolute inset-0 flex items-center justify-center z-[-1]"><i class="fa-solid fa-gamepad text-8xl text-gray-800"></i></div>
+            <img src="assets/pokedex.png"
+              class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition duration-700"
+              onerror="this.style.display='none'">
+            <div class="absolute inset-0 flex items-center justify-center z-[-1]"><i
+                class="fa-solid fa-gamepad text-8xl text-gray-800"></i></div>
           </div>
           <div class="p-8 flex-1 flex flex-col">
-            <h3 class="text-xl font-bold text-gray-200 mb-3 tech-font group-hover:text-yellow-400 transition">MINI POKÉDEX</h3>
+            <h3 class="text-xl font-bold text-gray-200 mb-3 tech-font group-hover:text-yellow-400 transition">MINI
+              POKÉDEX</h3>
             <p class="text-xs mb-5 font-mono text-yellow-400">JS ES6 | API REST</p>
-            <p class="text-gray-400 mb-8 flex-1 leading-relaxed text-sm">Consumo de API asíncrono. Renderizado dinámico de tarjetas en tiempo real.</p>
+            <p class="text-gray-400 mb-8 flex-1 leading-relaxed text-sm">Consumo de API asíncrono. Renderizado dinámico
+              de tarjetas en tiempo real.</p>
             <div class="flex gap-4 mt-auto">
-              <a href="https://alexisreynaga.github.io/pokedex/" target="_blank" class="flex-1 text-center py-2 bg-yellow-900/50 border border-yellow-500/50 hover:bg-yellow-800 text-yellow-200 text-xs font-bold uppercase tracking-wider transition rounded">Abrir</a>
-              <a href="https://github.com/alexisreynaga/pokedex" target="_blank" class="px-4 py-2 border border-gray-700 hover:border-gray-500 text-gray-400 hover:text-gray-200 transition rounded"><i class="fa-brands fa-github text-xl"></i></a>
+              <a href="https://alexisreynaga.github.io/pokedex/" target="_blank"
+                class="flex-1 text-center py-2 bg-yellow-900/50 border border-yellow-500/50 hover:bg-yellow-800 text-yellow-200 text-xs font-bold uppercase tracking-wider transition rounded">Abrir</a>
+              <a href="https://github.com/alexisreynaga/pokedex" target="_blank"
+                class="px-4 py-2 border border-gray-700 hover:border-gray-500 text-gray-400 hover:text-gray-200 transition rounded"><i
+                  class="fa-brands fa-github text-xl"></i></a>
             </div>
           </div>
         </article>
 
-        <article class="hud-card flex flex-col h-full hover-trigger js-tilt" data-tilt data-tilt-scale="1.02" data-tilt-glare data-tilt-max-glare="0.1">
+        <article class="hud-card flex flex-col h-full hover-trigger js-tilt" data-tilt data-tilt-scale="1.02"
+          data-tilt-glare data-tilt-max-glare="0.1">
           <div class="relative h-52 bg-black/50 overflow-hidden border-b border-gray-800 group">
-            <img src="assets/qr.png" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition duration-700" onerror="this.style.display='none'">
-            <div class="absolute inset-0 flex items-center justify-center z-[-1]"><i class="fa-solid fa-qrcode text-8xl text-gray-800"></i></div>
+            <img src="assets/qr.png"
+              class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition duration-700"
+              onerror="this.style.display='none'">
+            <div class="absolute inset-0 flex items-center justify-center z-[-1]"><i
+                class="fa-solid fa-qrcode text-8xl text-gray-800"></i></div>
           </div>
           <div class="p-8 flex-1 flex flex-col">
-            <h3 class="text-xl font-bold text-gray-200 mb-3 tech-font group-hover:text-green-400 transition">QR GENERATOR</h3>
+            <h3 class="text-xl font-bold text-gray-200 mb-3 tech-font group-hover:text-green-400 transition">QR
+              GENERATOR</h3>
             <p class="text-xs mb-5 font-mono text-green-400">JS LIBS | DOM</p>
-            <p class="text-gray-400 mb-8 flex-1 leading-relaxed text-sm">Herramienta rápida para generar y descargar códigos QR en el navegador.</p>
+            <p class="text-gray-400 mb-8 flex-1 leading-relaxed text-sm">Herramienta rápida para generar y descargar
+              códigos QR en el navegador.</p>
             <div class="flex gap-4 mt-auto">
-              <a href="https://alexisreynaga.github.io/QR/" target="_blank" class="flex-1 text-center py-2 bg-green-900/50 border border-green-500/50 hover:bg-green-800 text-green-200 text-xs font-bold uppercase tracking-wider transition rounded">Abrir</a>
-              <a href="https://github.com/alexisreynaga/QR" target="_blank" class="px-4 py-2 border border-gray-700 hover:border-gray-500 text-gray-400 hover:text-gray-200 transition rounded"><i class="fa-brands fa-github text-xl"></i></a>
+              <a href="https://alexisreynaga.github.io/QR/" target="_blank"
+                class="flex-1 text-center py-2 bg-green-900/50 border border-green-500/50 hover:bg-green-800 text-green-200 text-xs font-bold uppercase tracking-wider transition rounded">Abrir</a>
+              <a href="https://github.com/alexisreynaga/QR" target="_blank"
+                class="px-4 py-2 border border-gray-700 hover:border-gray-500 text-gray-400 hover:text-gray-200 transition rounded"><i
+                  class="fa-brands fa-github text-xl"></i></a>
             </div>
           </div>
         </article>
 
-        <article class="hud-card flex flex-col h-full hover-trigger js-tilt" data-tilt data-tilt-scale="1.02" data-tilt-glare data-tilt-max-glare="0.1">
+        <article class="hud-card flex flex-col h-full hover-trigger js-tilt" data-tilt data-tilt-scale="1.02"
+          data-tilt-glare data-tilt-max-glare="0.1">
           <div class="relative h-52 bg-black/50 overflow-hidden border-b border-gray-800 group">
-            <img src="assets/POS.png" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition duration-700" onerror="this.style.display='none'">
-            
-            <div class="absolute top-4 right-4 bg-cyan-600 text-white text-xs px-3 py-1 font-bold z-10 uppercase rounded shadow-lg">
+            <img src="assets/POS.png"
+              class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition duration-700"
+              onerror="this.style.display='none'">
+
+            <div
+              class="absolute top-4 right-4 bg-cyan-600 text-white text-xs px-3 py-1 font-bold z-10 uppercase rounded shadow-lg">
               <i class="fa-brands fa-windows mr-1"></i> Desktop
             </div>
-            
+
             <div class="absolute inset-0 flex items-center justify-center z-[-1]">
               <i class="fa-brands fa-flutter text-7xl text-gray-800"></i>
             </div>
           </div>
 
           <div class="p-8 flex-1 flex flex-col">
-            <h3 class="text-xl font-bold text-gray-200 mb-3 tech-font group-hover:text-cyan-400 transition">PUNTO DE VENTA (POS)</h3>
-            
+            <h3 class="text-xl font-bold text-gray-200 mb-3 tech-font group-hover:text-cyan-400 transition">PUNTO DE
+              VENTA (POS)</h3>
+
             <p class="text-xs mb-5 font-mono text-cyan-400">FLUTTER | DART | SQLITE</p>
-            
+
             <p class="text-gray-400 mb-8 flex-1 leading-relaxed text-sm">
-              Sistema nativo para Windows compilado con Flutter. Gestión de inventarios, ventas y reportes financieros operando 100% offline.
+              Sistema nativo para Windows compilado con Flutter. Gestión de inventarios, ventas y reportes financieros
+              operando 100% offline.
             </p>
-            
+
             <div class="flex gap-4 mt-auto">
-              
-              
-              <a href="https://github.com/AlexisReynaga/punto-de-venta" target="_blank" class="px-4 py-2 border border-gray-700 hover:border-gray-500 text-gray-400 hover:text-gray-200 transition rounded">
+
+
+              <a href="https://github.com/AlexisReynaga/punto-de-venta" target="_blank"
+                class="px-4 py-2 border border-gray-700 hover:border-gray-500 text-gray-400 hover:text-gray-200 transition rounded">
                 <i class="fa-brands fa-github text-xl"></i>
               </a>
             </div>
@@ -478,28 +793,39 @@
 
   <section id="contact" class="py-24 relative z-10">
     <div class="max-w-4xl mx-auto px-6">
-      <div class="hud-card p-8 md:p-12 rounded-xl js-tilt" data-tilt data-tilt-axis="x" data-tilt-glare data-tilt-max-glare="0.05">
+      <div class="hud-card p-8 md:p-12 rounded-xl js-tilt" data-tilt data-tilt-axis="x" data-tilt-glare
+        data-tilt-max-glare="0.05">
         <h2 class="text-3xl font-bold text-white mb-10 text-center tech-font glitch-text">INICIAR CONEXIÓN</h2>
         <div class="grid md:grid-cols-2 gap-12">
           <div class="space-y-8 relative z-10">
-            <p class="text-lg text-gray-300 leading-relaxed">¿Tienes un proyecto desafiante? <br> Estoy listo para colaborar. Envíame una señal.</p>
+            <p class="text-lg text-gray-300 leading-relaxed">¿Tienes un proyecto desafiante? <br> Estoy listo para
+              colaborar. Envíame una señal.</p>
             <div class="space-y-5 pt-4">
-              <a href="mailto:alexisreynaga30@gmail.com" class="flex items-center gap-4 text-green-500 hover:text-green-300 transition hover-trigger p-3 border border-green-900 rounded hover:bg-green-950/30">
-                <i class="fa-solid fa-envelope text-xl"></i> <span class="font-mono text-sm">alexisreynaga30@gmail.com</span>
+              <a href="mailto:alexisreynaga30@gmail.com"
+                class="flex items-center gap-4 text-green-500 hover:text-green-300 transition hover-trigger p-3 border border-green-900 rounded hover:bg-green-950/30">
+                <i class="fa-solid fa-envelope text-xl"></i> <span
+                  class="font-mono text-sm">alexisreynaga30@gmail.com</span>
               </a>
-              <a href="https://www.linkedin.com/in/alexisreynaga" target="_blank" class="flex items-center gap-4 text-blue-500 hover:text-blue-300 transition hover-trigger p-3 border border-blue-900 rounded hover:bg-blue-950/30">
+              <a href="https://www.linkedin.com/in/alexisreynaga" target="_blank"
+                class="flex items-center gap-4 text-blue-500 hover:text-blue-300 transition hover-trigger p-3 border border-blue-900 rounded hover:bg-blue-950/30">
                 <i class="fa-brands fa-linkedin text-xl"></i> <span class="font-mono text-sm">/in/alexisreynaga</span>
               </a>
-              <a href="tel:+524831195125" class="flex items-center gap-4 text-purple-500 hover:text-purple-300 transition hover-trigger p-3 border border-purple-900 rounded hover:bg-purple-950/30">
+              <a href="tel:+524831195125"
+                class="flex items-center gap-4 text-purple-500 hover:text-purple-300 transition hover-trigger p-3 border border-purple-900 rounded hover:bg-purple-950/30">
                 <i class="fa-solid fa-phone text-xl"></i> <span class="font-mono text-sm">+52 483 119 5125</span>
               </a>
             </div>
           </div>
           <form action="https://formspree.io/f/xgvglnja" method="POST" class="space-y-5 relative z-10">
-            <input type="text" name="name" placeholder="Nombre / ID" required class="w-full bg-black/40 border border-gray-800 text-gray-300 p-4 rounded focus:outline-none focus:border-green-600 focus:bg-black/60 transition" />
-            <input type="email" name="email" placeholder="Correo Electrónico" required class="w-full bg-black/40 border border-gray-800 text-gray-300 p-4 rounded focus:outline-none focus:border-green-600 focus:bg-black/60 transition" />
-            <textarea name="message" placeholder="Mensaje..." rows="4" required class="w-full bg-black/40 border border-gray-800 text-gray-300 p-4 rounded focus:outline-none focus:border-green-600 focus:bg-black/60 transition resize-none"></textarea>
-            <button type="submit" class="w-full bg-gradient-to-r from-green-800 to-green-600 hover:from-green-700 hover:to-green-500 text-white font-bold py-4 uppercase tracking-widest transition rounded shadow-lg hover:-translate-y-1 hover-trigger text-sm">Enviar Mensaje</button>
+            <input type="text" name="name" placeholder="Nombre / ID" required
+              class="w-full bg-black/40 border border-gray-800 text-gray-300 p-4 rounded focus:outline-none focus:border-green-600 focus:bg-black/60 transition" />
+            <input type="email" name="email" placeholder="Correo Electrónico" required
+              class="w-full bg-black/40 border border-gray-800 text-gray-300 p-4 rounded focus:outline-none focus:border-green-600 focus:bg-black/60 transition" />
+            <textarea name="message" placeholder="Mensaje..." rows="4" required
+              class="w-full bg-black/40 border border-gray-800 text-gray-300 p-4 rounded focus:outline-none focus:border-green-600 focus:bg-black/60 transition resize-none"></textarea>
+            <button type="submit"
+              class="w-full bg-gradient-to-r from-green-800 to-green-600 hover:from-green-700 hover:to-green-500 text-white font-bold py-4 uppercase tracking-widest transition rounded shadow-lg hover:-translate-y-1 hover-trigger text-sm">Enviar
+              Mensaje</button>
           </form>
         </div>
       </div>
@@ -517,56 +843,104 @@
     document.addEventListener('DOMContentLoaded', () => {
       VanillaTilt.init(document.querySelectorAll(".js-tilt"), { max: 10, speed: 500, glare: true, "max-glare": 0.1, scale: 1.02 });
 
+      // OPTIMIZACIÓN: Canvas de Matrix usando requestAnimationFrame
       const canvas = document.getElementById('matrix-canvas');
       const ctx = canvas.getContext('2d');
       const resizeCanvas = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
       resizeCanvas();
       window.addEventListener('resize', resizeCanvas);
+
       const letters = '01XYZESTOESMATRIXCODIGO';
       const fontSize = 14;
       const columns = canvas.width / fontSize;
       const drops = Array(Math.floor(columns)).fill(1);
-      function drawMatrix() {
-        ctx.fillStyle = 'rgba(5, 5, 5, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = '#0F0'; ctx.font = fontSize + 'px monospace';
+
+      let lastTime = 0;
+      const fpsInterval = 33; // ~30 FPS
+
+      function drawMatrix(time) {
+        requestAnimationFrame(drawMatrix);
+
+        const deltaTime = time - lastTime;
+        if (deltaTime < fpsInterval) return;
+        lastTime = time - (deltaTime % fpsInterval);
+
+        ctx.fillStyle = 'rgba(5, 5, 5, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#0F0';
+        ctx.font = fontSize + 'px monospace';
+
         for (let i = 0; i < drops.length; i++) {
           const text = letters.charAt(Math.floor(Math.random() * letters.length));
-          if(Math.random() > 0.98) ctx.fillStyle = '#FFF'; else ctx.fillStyle = '#0F0';
+          if (Math.random() > 0.98) ctx.fillStyle = '#FFF'; else ctx.fillStyle = '#0F0';
           ctx.fillText(text, i * fontSize, drops[i] * fontSize);
           if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
           drops[i]++;
         }
       }
-      setInterval(drawMatrix, 33);
+      requestAnimationFrame(drawMatrix);
 
       const scene = document.querySelector('.scene');
       const carousel = document.querySelector('.carousel');
       const cells = document.querySelectorAll('.carousel__cell');
       const cellCount = cells.length;
-      const radius = 280; 
+      const radius = 280;
       let angle = 0; let isDragging = false; let startX = 0; let autoRotateID;
       const cellAngle = 360 / cellCount;
       cells.forEach((cell, index) => { cell.style.transform = `rotateY(${index * cellAngle}deg) translateZ(${radius}px)`; });
+
       function autoRotate() { angle -= 0.2; carousel.style.transform = `rotateY(${angle}deg)`; autoRotateID = requestAnimationFrame(autoRotate); }
       autoRotateID = requestAnimationFrame(autoRotate);
-      
+
       scene.addEventListener('mousedown', startDrag);
-      scene.addEventListener('touchstart', startDrag, {passive: false});
+      scene.addEventListener('touchstart', startDrag, { passive: false });
       window.addEventListener('mousemove', drag);
-      window.addEventListener('touchmove', drag, {passive: false});
+      window.addEventListener('touchmove', drag, { passive: false });
       window.addEventListener('mouseup', endDrag);
       window.addEventListener('touchend', endDrag);
-      scene.addEventListener('mouseenter', () => { if(!isDragging) cancelAnimationFrame(autoRotateID); });
-      scene.addEventListener('mouseleave', () => { if(!isDragging) autoRotateID = requestAnimationFrame(autoRotate); });
+      scene.addEventListener('mouseenter', () => { if (!isDragging) cancelAnimationFrame(autoRotateID); });
+      scene.addEventListener('mouseleave', () => { if (!isDragging) autoRotateID = requestAnimationFrame(autoRotate); });
 
       function startDrag(e) { isDragging = true; cancelAnimationFrame(autoRotateID); startX = (e.pageX || e.touches[0].pageX); scene.style.cursor = 'grabbing'; }
       function drag(e) { if (!isDragging) return; e.preventDefault(); const x = (e.pageX || e.touches[0].pageX); const diff = (x - startX) * 0.5; angle += diff; carousel.style.transform = `rotateY(${angle}deg)`; startX = x; }
       function endDrag() { if (!isDragging) return; isDragging = false; scene.style.cursor = 'grab'; }
 
+      // OPTIMIZACIÓN: Cursor personalizado con transform y requestAnimationFrame
       const dot = document.querySelector('.cursor-dot');
       const circle = document.querySelector('.cursor-circle');
       const triggers = document.querySelectorAll('.hover-trigger, a, button, input, textarea');
-      window.addEventListener('mousemove', (e) => { dot.style.left = `${e.clientX}px`; dot.style.top = `${e.clientY}px`; circle.animate({ left: `${e.clientX - 20}px`, top: `${e.clientY - 20}px` }, { duration: 500, fill: "forwards" }); });
-      triggers.forEach(t => { t.addEventListener('mouseenter', () => { circle.style.transform = 'scale(1.5)'; circle.style.backgroundColor = 'rgba(10, 255, 10, 0.1)'; dot.style.opacity = '0'; }); t.addEventListener('mouseleave', () => { circle.style.transform = 'scale(1)'; circle.style.backgroundColor = 'transparent'; dot.style.opacity = '1'; }); });
+
+      let mouseX = 0, mouseY = 0;
+      let circleX = 0, circleY = 0;
+
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        dot.style.transform = `translate3d(${mouseX - 4}px, ${mouseY - 4}px, 0)`;
+      });
+
+      function animateCursor() {
+        circleX += (mouseX - circleX) * 0.15;
+        circleY += (mouseY - circleY) * 0.15;
+        circle.style.transform = `translate3d(${circleX - 20}px, ${circleY - 20}px, 0)`;
+        requestAnimationFrame(animateCursor);
+      }
+      animateCursor();
+
+      triggers.forEach(t => {
+        t.addEventListener('mouseenter', () => {
+          circle.style.backgroundColor = 'rgba(10, 255, 10, 0.1)';
+          circle.style.width = '60px';
+          circle.style.height = '60px';
+          dot.style.opacity = '0';
+        });
+        t.addEventListener('mouseleave', () => {
+          circle.style.backgroundColor = 'transparent';
+          circle.style.width = '40px';
+          circle.style.height = '40px';
+          dot.style.opacity = '1';
+        });
+      });
 
       const btn = document.getElementById('mobileBtn');
       const menu = document.getElementById('mobileMenu');
@@ -576,4 +950,5 @@
     });
   </script>
 </body>
+
 </html>
