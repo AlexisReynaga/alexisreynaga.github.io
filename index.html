@@ -27,7 +27,6 @@
       color: #f0f0f0;
       font-family: 'Rajdhani', sans-serif;
       overflow-x: hidden;
-      cursor: none;
       user-select: none;
     }
 
@@ -50,38 +49,8 @@
       pointer-events: none;
     }
 
-    /* OPTIMIZACIÓN: top:0, left:0, will-change y sin transiciones CSS lentas */
-    .cursor-dot {
-      top: 0;
-      left: 0;
-      width: 8px;
-      height: 8px;
-      background: var(--neon-green);
-      border-radius: 50%;
-      position: fixed;
-      z-index: 99999 !important;
-      pointer-events: none;
-      box-shadow: 0 0 10px var(--neon-green);
-      will-change: transform;
-    }
-
-    .cursor-circle {
-      top: 0;
-      left: 0;
-      width: 40px;
-      height: 40px;
-      border: 2px solid var(--neon-green);
-      border-radius: 50%;
-      position: fixed;
-      z-index: 99998 !important;
-      pointer-events: none;
-      box-shadow: 0 0 5px var(--neon-green), inset 0 0 5px var(--neon-green);
-      will-change: transform;
-    }
-
     .hud-card {
       position: relative;
-      /* OPTIMIZACIÓN: Fondo sólido opaco, eliminado el backdrop-filter pesado */
       background: rgba(5, 5, 10, 0.98);
       border-radius: 1rem;
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -257,8 +226,6 @@
 <body>
 
   <canvas id="matrix-canvas"></canvas>
-  <div class="cursor-dot hidden md:block"></div>
-  <div class="cursor-circle hidden md:block"></div>
 
   <nav class="fixed top-0 w-full z-50 bg-black/90 backdrop-blur-md border-b border-green-900/30">
     <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
@@ -843,7 +810,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       VanillaTilt.init(document.querySelectorAll(".js-tilt"), { max: 10, speed: 500, glare: true, "max-glare": 0.1, scale: 1.02 });
 
-      // OPTIMIZACIÓN: Canvas de Matrix usando requestAnimationFrame
+      // Canvas de Matrix optimizado
       const canvas = document.getElementById('matrix-canvas');
       const ctx = canvas.getContext('2d');
       const resizeCanvas = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
@@ -904,43 +871,6 @@
       function startDrag(e) { isDragging = true; cancelAnimationFrame(autoRotateID); startX = (e.pageX || e.touches[0].pageX); scene.style.cursor = 'grabbing'; }
       function drag(e) { if (!isDragging) return; e.preventDefault(); const x = (e.pageX || e.touches[0].pageX); const diff = (x - startX) * 0.5; angle += diff; carousel.style.transform = `rotateY(${angle}deg)`; startX = x; }
       function endDrag() { if (!isDragging) return; isDragging = false; scene.style.cursor = 'grab'; }
-
-      // OPTIMIZACIÓN: Cursor personalizado con transform y requestAnimationFrame
-      const dot = document.querySelector('.cursor-dot');
-      const circle = document.querySelector('.cursor-circle');
-      const triggers = document.querySelectorAll('.hover-trigger, a, button, input, textarea');
-
-      let mouseX = 0, mouseY = 0;
-      let circleX = 0, circleY = 0;
-
-      window.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        dot.style.transform = `translate3d(${mouseX - 4}px, ${mouseY - 4}px, 0)`;
-      });
-
-      function animateCursor() {
-        circleX += (mouseX - circleX) * 0.15;
-        circleY += (mouseY - circleY) * 0.15;
-        circle.style.transform = `translate3d(${circleX - 20}px, ${circleY - 20}px, 0)`;
-        requestAnimationFrame(animateCursor);
-      }
-      animateCursor();
-
-      triggers.forEach(t => {
-        t.addEventListener('mouseenter', () => {
-          circle.style.backgroundColor = 'rgba(10, 255, 10, 0.1)';
-          circle.style.width = '60px';
-          circle.style.height = '60px';
-          dot.style.opacity = '0';
-        });
-        t.addEventListener('mouseleave', () => {
-          circle.style.backgroundColor = 'transparent';
-          circle.style.width = '40px';
-          circle.style.height = '40px';
-          dot.style.opacity = '1';
-        });
-      });
 
       const btn = document.getElementById('mobileBtn');
       const menu = document.getElementById('mobileMenu');
